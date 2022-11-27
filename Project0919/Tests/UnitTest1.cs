@@ -4,30 +4,12 @@ namespace Project0919.Tests;
 
 public class UnitTest1
 {
-    private readonly ITestOutputHelper _testOutputHelper;
     private const string AssetsPath = "./Tests/Assets";
+    private readonly ITestOutputHelper _testOutputHelper;
 
     public UnitTest1(ITestOutputHelper testOutputHelper)
     {
         _testOutputHelper = testOutputHelper;
-    }
-
-    [Fact]
-    public void DemoTestCase1()
-    {
-        _testOutputHelper.WriteLine(Directory.GetCurrentDirectory());
-    }
-
-    [Theory]
-    [MemberData(nameof(CanProgramWorkData))]
-    public async Task CanProgramWork(string path, Program.Result expectedResult)
-    {
-        var result = await Program.Execute(path);
-        Assert.Equivalent(result.Original, expectedResult.Original);
-        Assert.Equivalent(result.Formatted, expectedResult.Formatted);
-        var occurrences = result.Occurrences.ToHashSet();
-        var expectedOccurrences = expectedResult.Occurrences.ToHashSet();
-        Assert.Equivalent(occurrences, expectedOccurrences);
     }
 
     public static IEnumerable<object[]> CanProgramWorkData => new List<object[]>
@@ -55,7 +37,24 @@ public class UnitTest1
                     ("World", 1)
                 }
             }
-
         }
     };
+
+    [Fact]
+    public void DemoTestCase1()
+    {
+        _testOutputHelper.WriteLine(Directory.GetCurrentDirectory());
+    }
+
+    [Theory]
+    [MemberData(nameof(CanProgramWorkData))]
+    public async Task CanProgramWork(string path, Program.Result expectedResult)
+    {
+        var result = await Program.Execute(path);
+        Assert.Equivalent(result.Original, expectedResult.Original);
+        Assert.Equivalent(result.Formatted, expectedResult.Formatted);
+        var occurrences = result.Occurrences.ToHashSet();
+        var expectedOccurrences = expectedResult.Occurrences.ToHashSet();
+        Assert.Equivalent(occurrences, expectedOccurrences);
+    }
 }

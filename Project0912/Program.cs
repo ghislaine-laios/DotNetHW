@@ -1,17 +1,12 @@
-namespace Lesson1_2
-{
-    internal static class Program
-    {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        static void Main()
-        {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
-            ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
-        }
-    }
-}
+﻿// See https://aka.ms/new-console-template for more information
+
+using Lesson2;
+
+var bank = new DemoBank();
+var ATM = bank.ATMs[0];
+ATM.BigMoneyFetched += (sender, e) => { Console.WriteLine("Big money fetched!"); };
+Console.WriteLine(ATM.GetBalance(1000));
+var cashes = ATM.Withdraw(1000, 10000);
+Console.WriteLine(ATM.GetBalance(1000));
+ATM.Deposit(1000, cashes);
+Console.WriteLine(ATM.GetBalance(1000));

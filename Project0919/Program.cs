@@ -4,19 +4,9 @@ namespace Project0919;
 
 public partial class Program
 {
-    public class Result
-    {
-        public class Statistic
-        {
-            public int LineCount { get; set; }
-            public int WordCount { get; set; }
-        }
-
-        public Statistic Original { get; } = new Statistic();
-        public Statistic Formatted { get; } = new Statistic();
-        public required IList<(string, int)> Occurrences { get; set; }
-
-    }
+    public static Regex WordRegex = GenerateWordRegex();
+    public static Regex NonEmptyRegex = GenerateNonEmptyRegex();
+    public static Regex CommentRegex = GenerateCommentRegex();
 
     public static async Task<Result> Execute(string path)
     {
@@ -27,19 +17,19 @@ public partial class Program
         var (formattedLineNum, formattedWordNum) = CountLinesAndWords(formattedLines, formattedWords);
         var occurrences =
             (from occurrence in GetOccurrencesNum(formattedWords)
-             select (occurrence.Key, occurrence.Value)).ToList();
+                select (occurrence.Key, occurrence.Value)).ToList();
         var result = new Result
         {
             Occurrences = occurrences,
             Original =
             {
                 LineCount = originalLineNum,
-                WordCount = originalWordNum,
+                WordCount = originalWordNum
             },
             Formatted =
             {
                 LineCount = formattedLineNum,
-                WordCount = formattedWordNum,
+                WordCount = formattedWordNum
             }
         };
         return result;
@@ -49,10 +39,7 @@ public partial class Program
     {
         using var sr = new StreamReader(path);
         var result = new List<string>();
-        while (!sr.EndOfStream)
-        {
-            result.Add(await sr.ReadLineAsync() ?? throw new InvalidOperationException());
-        }
+        while (!sr.EndOfStream) result.Add(await sr.ReadLineAsync() ?? throw new InvalidOperationException());
         return result;
     }
 
@@ -76,6 +63,7 @@ public partial class Program
             if (hasKey) result[word]++;
             else result[word] = 1;
         }
+
         return result;
     }
 
@@ -98,6 +86,7 @@ public partial class Program
                 result.Add(line);
             }
         }
+
         return result;
     }
 
@@ -109,18 +98,29 @@ public partial class Program
             var matches = WordRegex.Matches(line);
             result.AddRange(from match in matches select match.Value);
         }
+
         return result;
     }
 
-    public static Regex WordRegex = GenerateWordRegex();
-    public static Regex NonEmptyRegex = GenerateNonEmptyRegex();
-    public static Regex CommentRegex = GenerateCommentRegex();
-
     [GeneratedRegex(@"([\x30-\x39]|[\x41-\x5A]|[\x61-\x7A]|_)+")]
     private static partial Regex GenerateWordRegex();
+
     [GeneratedRegex(@"^(?!\s*$).+")]
     private static partial Regex GenerateNonEmptyRegex();
 
     [GeneratedRegex(@"\/\/")]
     private static partial Regex GenerateCommentRegex();
+
+    public class Result
+    {
+        public Statistic Original { get; } = new();
+        public Statistic Formatted { get; } = new();
+        public required IList<(string, int)> Occurrences { get; set; }
+
+        public class Statistic
+        {
+            public int LineCount { get; set; }
+            public int WordCount { get; set; }
+        }
+    }
 }
