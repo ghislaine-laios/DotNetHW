@@ -1,0 +1,47 @@
+﻿<Window x:Class="Project1010.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Project1010"
+        xmlns:models="clr-namespace:Project1010.Models"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="1400" Loaded="Window_Loaded">
+    <Window.Resources>
+        <CollectionViewSource x:Key="ClassViewSource"></CollectionViewSource>
+        <CollectionViewSource x:Key="StudentViewSource" 
+                              Source="{Binding Students, Source={StaticResource ClassViewSource}}"></CollectionViewSource>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+            <ColumnDefinition Width="3*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <DockPanel>
+            <Button DockPanel.Dock="Bottom" Click="Button_Click">Save</Button>
+            <DataGrid 
+                x:Name="ClassDataGrid" 
+                ItemsSource="{Binding Source={StaticResource ClassViewSource}}"
+                AutoGenerateColumns="False"
+                DockPanel.Dock="Top" SelectedCellsChanged="ClassDataGrid_Selected">
+                <DataGrid.Columns>
+                    <DataGridTextColumn 
+                        Binding="{Binding Id}"
+                        Header="Class ID" Width="SizeToHeader"
+                        IsReadOnly="True"></DataGridTextColumn>
+                    <DataGridTextColumn
+                        Binding="{Binding Name}"
+                        Header="Name"></DataGridTextColumn>
+                    <DataGridTextColumn
+                        Binding="{Binding StartYear}"
+                        Header="Start Year"></DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+        <DataGrid Grid.Column="1"
+                  x:Name="StudentsDataGrid"
+                  ItemsSource="{Binding Source={StaticResource StudentViewSource}}"
+                  >
+        </DataGrid>
+    </Grid>
+</Window>

@@ -1,4 +1,4 @@
-﻿namespace Lesson2;
+﻿namespace Project0912;
 
 internal interface ICash
 {

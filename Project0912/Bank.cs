@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
 
-namespace Lesson2;
+namespace Project0912;
 
 internal interface IUserBank<T> where T : ICash
 {
